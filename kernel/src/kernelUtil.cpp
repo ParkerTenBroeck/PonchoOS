@@ -74,6 +74,11 @@ void PrepareACPI(BootInfo* bootInfo){
 
 BasicRenderer r = BasicRenderer(NULL, NULL);
 KernelInfo InitializeKernel(BootInfo* bootInfo){
+
+    PrepareMemory(bootInfo);
+    InitializeHeap((void*)0x0000100000000000, 0x20);
+
+    memset(bootInfo->framebuffer->BaseAddress, 0, bootInfo->framebuffer->BufferSize);
     r = BasicRenderer(bootInfo->framebuffer, bootInfo->psf1_Font);
     GlobalRenderer = &r;
 
@@ -81,12 +86,6 @@ KernelInfo InitializeKernel(BootInfo* bootInfo){
     gdtDescriptor.Size = sizeof(GDT) - 1;
     gdtDescriptor.Offset = (uint64_t)&DefaultGDT;
     LoadGDT(&gdtDescriptor);
-
-    PrepareMemory(bootInfo);
-
-    memset(bootInfo->framebuffer->BaseAddress, 0, bootInfo->framebuffer->BufferSize);
-
-    InitializeHeap((void*)0x0000100000000000, 0x20);
 
     PrepareInterrupts();
 

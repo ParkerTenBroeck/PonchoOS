@@ -8,32 +8,14 @@
             "name": "Debug Kernel",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/kernel/bin/kernel.elf",
-            "args": [],
-            "stopAtEntry": false,
-            "cwd": "${workspaceFolder}",
-            "environment": [],
-            "MIMode": "gdb",
-            "miDebuggerPath": "/usr/bin/gdb",
-            "targetArchitecture": "x64",
-            "customLaunchSetupCommands": [
-                {
-                    "text" : "target remote localhost:1234",
-                    "description": "Connect to QEMU"
-                },
-                {
-                    "test" : "symbol-file kernel.elf",
-                    "description": "Get symbols"
-                }
-            ],
-            "setupCommands": [
-                {
-                    "description": "Enable pretty-printing for gdb",
-                    "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
-                }
-            ],
-            "preLaunchTask": "Build and Run"
-        }
+            "program": "${workspaceRoot}/kernel/bin/kernel.elf",
+            "miDebuggerServerAddress": "192.168.0.10:1234",
+            "cwd": "${workspaceRoot}",
+            "externalConsole": true,
+            "linux": {
+              "MIMode": "gdb"
+            },
+            "preLaunchTask": "Debug"
+          }
     ]
 }

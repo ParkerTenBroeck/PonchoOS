@@ -6,22 +6,25 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "cd kernel && make kernel buildimg"
+            "command": "make --directory=${workspaceFolder}/kernel/ kernel && make --directory=${workspaceFolder}/kernel/ buildimg",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal":"always"
+            },
+            "problemMatcher": "$msCompile"
         },
         {
             "label": "Run",
             "type": "shell",
-            "command": "powershell.exe \"Start-Process ./kernel/run.bat\""
-        },
-        {
-            "label": "DebugRun",
-            "type": "shell",
-            "command": "powershell.exe \"Start-Process ./kernel/runDebug.bat\""
+            "command": "cmd.exe /C start cmd.exe /C U:/${workspaceFolder}/kernel/run.bat"
         },
         {
             "label": "Debug",
             "type": "shell",
-            "command": "gdb ${workspaceFolder}/kernel/bin/kernel.elf && target remote localhost:1234"
+            "command": "cmd.exe /C start cmd.exe /C U:/${workspaceFolder}/kernel/debug.bat"//"powershell.exe \"Start-Process ./kernel/runDebug.bat\""
         },
         {
             "label": "Build and Debug",
@@ -29,7 +32,6 @@
             "dependsOrder": "sequence",
             "dependsOn": [
                 "Build",
-                "DebugRun",
                 "Debug"
             ]
         },
@@ -40,8 +42,7 @@
             "dependsOn": [
                 "Build",
                 "Run"
-            ],
-            "problemMatcher": []
+            ]
         }
     ]
 }
