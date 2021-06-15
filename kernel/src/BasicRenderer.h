@@ -9,7 +9,6 @@ class BasicRenderer{
     BasicRenderer(Framebuffer* targetFramebuffer, PSF1_FONT* psf1_Font);
     Point CursorPosition;
     Framebuffer* TargetFramebuffer;
-	char* TargetCharBuffer;
     PSF1_FONT* PSF1_Font;
     uint32_t MouseCursorBuffer[16 * 16];
     uint32_t MouseCursorBufferAfter[16 * 16];

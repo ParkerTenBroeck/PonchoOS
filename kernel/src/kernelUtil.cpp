@@ -5,6 +5,8 @@
 #include "IO.h"
 #include "memory/heap.h"
 
+#include "NewBasicRenderer.h"
+
 KernelInfo kernelInfo; 
 
 void PrepareMemory(BootInfo* bootInfo){
@@ -81,6 +83,17 @@ KernelInfo InitializeKernel(BootInfo* bootInfo){
     memset(bootInfo->framebuffer->BaseAddress, 0, bootInfo->framebuffer->BufferSize);
     r = BasicRenderer(bootInfo->framebuffer, bootInfo->psf1_Font);
     GlobalRenderer = &r;
+
+    NewBasicRenderer re = NewBasicRenderer(bootInfo->framebuffer, bootInfo->psf1_Font);
+    
+    //GlobalRenderer->Print("x: ");
+    //GlobalRenderer->Print(to_string((int64_t)re.GetCharWidth()));
+    //GlobalRenderer->Print(" y: ");
+    //GlobalRenderer->Print(to_string((int64_t)re.GetCharHeight()));
+    //GlobalRenderer->Next();
+
+    //re.ClearScreen();
+    //re.DrawPix(10,10,0xFFFFFFFF, 1);
 
     GDTDescriptor gdtDescriptor;
     gdtDescriptor.Size = sizeof(GDT) - 1;

@@ -8,13 +8,13 @@ BasicRenderer::BasicRenderer(Framebuffer* targetFramebuffer, PSF1_FONT* psf1_Fon
     TargetFramebuffer = targetFramebuffer;
     PSF1_Font = psf1_Font;
     Colour = 0xffffffff;
+    ClearColour = 0x00000000;
     CursorPosition = {0, 0};
 	
 	if(targetFramebuffer > 0){
 		this->Print("GlobalRenderer is up");
         this->Next();
 		this->Next();
-		TargetCharBuffer = (char*)malloc(((targetFramebuffer->Height) * (targetFramebuffer->Width)) / (16* 16));
 	}
 }
 
