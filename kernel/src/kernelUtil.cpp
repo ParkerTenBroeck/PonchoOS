@@ -5,6 +5,7 @@
 #include "IO.h"
 #include "memory/heap.h"
 
+#include "scheduling/pit/pit.h"
 #include "NewBasicRenderer.h"
 
 KernelInfo kernelInfo; 
@@ -85,15 +86,6 @@ KernelInfo InitializeKernel(BootInfo* bootInfo){
     GlobalRenderer = &r;
 
     NewBasicRenderer re = NewBasicRenderer(bootInfo->framebuffer, bootInfo->psf1_Font);
-    
-    //GlobalRenderer->Print("x: ");
-    //GlobalRenderer->Print(to_string((int64_t)re.GetCharWidth()));
-    //GlobalRenderer->Print(" y: ");
-    //GlobalRenderer->Print(to_string((int64_t)re.GetCharHeight()));
-    //GlobalRenderer->Next();
-
-    //re.ClearScreen();
-    //re.DrawPix(10,10,0xFFFFFFFF, 1);
 
     GDTDescriptor gdtDescriptor;
     gdtDescriptor.Size = sizeof(GDT) - 1;
@@ -110,6 +102,17 @@ KernelInfo InitializeKernel(BootInfo* bootInfo){
     outb(PIC2_DATA, 0b11101111);
 
     asm ("sti");
+
+
+    char* ha = "12,jdf,jsdfhafddf";
+    for(int i = 0; i < sizeof ha; i ++){
+        re.DrawChar(ha[i], i * 8, 100);
+    }
+
+    while(true){
+        re.ScrollScreenY(1);
+        PIT::Sleep(10);
+    }
 
     return kernelInfo;
 }

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceRoot}/kernel/bin/kernel.elf",
-            "miDebuggerServerAddress": "192.168.0.10:1234",
+            "miDebuggerServerAddress": "192.168.1.130:1234",
             "cwd": "${workspaceRoot}",
             "externalConsole": true,
             "linux": {

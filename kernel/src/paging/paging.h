@@ -15,6 +15,10 @@ enum PT_Flag {
     NX = 63 // only if supported
 };
 
+struct PageTableEntry{
+    
+};
+
 struct PageDirectoryEntry {
     uint64_t Value;
     void SetFlag(PT_Flag flag, bool enabled);

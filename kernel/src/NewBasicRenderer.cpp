@@ -45,7 +45,7 @@ void NewBasicRenderer::ReEvaluateFrameBufferPix(uint32_t x, uint32_t y){
     DrawPix(x,y, color);
 }
 
-void NewBasicRenderer::DrawPix(uint32_t x, uint32_t y, uint32_t colour, uint32_t bufferID, bool updateScreen){
+inline void NewBasicRenderer::DrawPix(uint32_t x, uint32_t y, uint32_t colour, uint32_t bufferID, bool updateScreen){
     uint32_t* layerBuffer = FetchBuffer(bufferID);
     size_t index = x + y * this->GetWidth();
     layerBuffer[index] = colour;
@@ -55,17 +55,17 @@ void NewBasicRenderer::DrawPix(uint32_t x, uint32_t y, uint32_t colour, uint32_t
 }
 
 
-uint32_t NewBasicRenderer::GetPix(uint32_t x, uint32_t y, uint32_t bufferID){
+inline uint32_t NewBasicRenderer::GetPix(uint32_t x, uint32_t y, uint32_t bufferID){
     uint32_t* buffer = FetchBuffer(bufferID);
     size_t index = x + y * this->GetWidth();
     return buffer[index];
 }
 
-void NewBasicRenderer::DrawPix(uint32_t x, uint32_t y, uint32_t colour){
+inline void NewBasicRenderer::DrawPix(uint32_t x, uint32_t y, uint32_t colour){
     *(uint32_t*)((uint64_t)TargetFramebuffer->BaseAddress + (x*4) + (y * TargetFramebuffer->PixelsPerScanLine * 4)) = colour;
 }
 
-uint32_t NewBasicRenderer::GetPix(uint32_t x, uint32_t y){
+inline uint32_t NewBasicRenderer::GetPix(uint32_t x, uint32_t y){
     return *(uint32_t*)((uint64_t)TargetFramebuffer->BaseAddress + (x*4) + (y * TargetFramebuffer->PixelsPerScanLine * 4));
 }
 
@@ -87,6 +87,54 @@ void NewBasicRenderer::ClearScreen(uint32_t color){
     }
 
     this->UpdateScreen();
+}
+
+void NewBasicRenderer::ScrollScreenY(int scroll){
+    if(scroll == 0){
+        return;
+    }
+
+    if(scroll > 0){
+        
+        if(false){
+        for(int b = 0; b < 4; b ++){
+            uint32_t* buffer = this->FetchBuffer(b);
+
+            size_t offset = scroll * GetWidth();
+            size_t index = GetWidth() * GetHeight() - 1 - offset;
+
+            for(int i = index; i >= 0; i --){
+                buffer[i + offset] = buffer[i]; 
+            }
+            for(int i = 0; i < scroll * GetWidth(); i ++){
+                buffer[i] = DefaultBackgroundColor;
+            }
+        }
+        }
+
+        uint64_t fbBase = (uint64_t)TargetFramebuffer->BaseAddress;
+        uint64_t bytesPerScanline = TargetFramebuffer->PixelsPerScanLine * 4;
+        uint64_t fbHeight = TargetFramebuffer->Height;
+        uint64_t fbSize = TargetFramebuffer->BufferSize;
+        uint64_t offset = scroll * bytesPerScanline;
+
+        for (int verticalScanline = fbHeight - scroll - 1; verticalScanline >= 0; verticalScanline --){
+            uint64_t pixPtrBase = fbBase + (bytesPerScanline * verticalScanline);
+            for (uint32_t* pixPtr = (uint32_t*)pixPtrBase; pixPtr < (uint32_t*)(pixPtrBase + bytesPerScanline); pixPtr ++){
+                *(uint32_t*)((uint64_t)pixPtr + offset) = *pixPtr;
+            }
+        }
+
+        for (int verticalScanline = 0; verticalScanline < scroll; verticalScanline ++){
+            uint64_t pixPtrBase = fbBase + (bytesPerScanline * verticalScanline);
+            for (uint32_t* pixPtr = (uint32_t*)pixPtrBase; pixPtr < (uint32_t*)(pixPtrBase + bytesPerScanline); pixPtr ++){
+                *pixPtr = DefaultBackgroundColor;
+            }
+        }
+    }else{
+        scroll = scroll * -1;
+
+    }
 }
 
 void NewBasicRenderer::ClearBuffer(bool updateScreen, uint32_t color, uint32_t bufferID){
